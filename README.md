@@ -1,6 +1,8 @@
 # open-im-sdk-unity
-OpenIM SDK of Unity,to develop IM of game quickly(Developing)
 
+openim sdk for unity
 
+## Usage
 
-<span style="font-size: 1000px;">⚠️</span> This repository has been deprecated.If you need to use the Unity SDK, please go to [open-im-sdk-dotnet](https://github.com/openimsdk/open-im-sdk-dotnet) and fetch the latest code from the open-im-sdk-unity branch.
+Clone the git repository to the Unity project Assets directory
+
