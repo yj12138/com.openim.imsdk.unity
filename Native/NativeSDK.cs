@@ -6,35 +6,11 @@ namespace open_im_sdk.native
     delegate void MessageHandler(int id, string msg);
     class IMNativeSDK
     {
-        #region IMDLLName
-#if UNITY_EDITOR
-#if UNITY_EDITOR_OSX
-                    public const string IMDLLName = "openimsdk";
+#if (UNITY_IPHONE || UNITY_TVOS || UNITY_WEBGL || UNITY_SWITCH) && !UNITY_EDITOR
+        const string IMDLLName = "__Internal";
 #else
-                    public const string IMDLLName = "openimsdk";
+        const string IMDLLName = "openimsdk";
 #endif
-#else
-#if UNITY_IPHONE
-                    public const string IMDLLName = "__Internal";
-#elif UNITY_ANDROID
-                    public const string IMDLLName = "openimsdk";
-#elif UNITY_STANDALONE_WIN
-                    public const string IMDLLName = "openimsdk";
-#elif UNITY_STANDALONE_OSX
-                    public const string IMDLLName = "openimsdk";
-#elif UNITY_WEBGL
-                    public const string IMDLLName = "__Internal";
-#else
-#if WINDOWS
-        public const string IMDLLName = "Plugins/x86_64/openimsdk.dll";
-#elif LINUX
-        public const string IMDLLName = "Plugins/linux/openimsdk.so";
-#elif OSX
-        public const string IMDLLName = "Plugins/osx/openimsdk.dylib";
-#endif
-#endif
-#endif
-        #endregion
 
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetMessageHandler(MessageHandler handler);
