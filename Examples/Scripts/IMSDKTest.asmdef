@@ -1,0 +1,16 @@
+{
+    "name": "IMSDKTest",
+    "rootNamespace": "",
+    "references": [
+        "GUID:cc222aac68785fa44adfb5fcfa944201"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
