@@ -9,9 +9,11 @@ namespace OpenIM.IMSDK.Unity.Native
         Msg_ConnectFailed,
         Msg_KickedOffline,
         Msg_UserTokenExpired,
+        Msg_UserTokenInvalid,
 
         Msg_SyncServerStart,
         Msg_SyncServerFinish,
+        Msg_SyncServerProgress,
         Msg_SyncServerFailed,
         Msg_NewConversation,
         Msg_ConversationChanged,
@@ -39,12 +41,10 @@ namespace OpenIM.IMSDK.Unity.Native
         Msg_FriendAdded,
         Msg_FriendDeleted,
         Msg_FriendInfoChanged,
-
         Msg_BlackAdded,
         Msg_BlackDeleted,
 
         Msg_JoinedGroupAdded,
-
         Msg_JoinedGroupDeleted,
         Msg_GroupMemberAdded,
         Msg_GroupMemberDeleted,
@@ -52,7 +52,6 @@ namespace OpenIM.IMSDK.Unity.Native
         Msg_GroupApplicationDeleted,
         Msg_GroupInfoChanged,
         Msg_GroupDismissed,
-
         Msg_GroupMemberInfoChanged,
         Msg_GroupApplicationAccepted,
         Msg_GroupApplicationRejected,
@@ -61,11 +60,14 @@ namespace OpenIM.IMSDK.Unity.Native
 
         Msg_SelfInfoUpdated,
         Msg_UserStatusChanged,
+        Msg_UserCommandAdd,
+        Msg_UserCommandDelete,
+        Msg_UserCommandUpdate,
 
         Msg_SendMessage_Error,
         Msg_SendMessage_Success,
         Msg_SendMessage_Progress,
 
-        Msg_ErrorOrSuc,
+        Msg_ErrorOrSuc
     }
 }

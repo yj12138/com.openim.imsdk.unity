@@ -7,5 +7,6 @@ namespace OpenIM.IMSDK.Unity
         void OnConnectFailed(int errCode, string errMsg);
         void OnKickedOffline();
         void OnUserTokenExpired();
+        void OnUserTokenInvalid(string errMsg);
     }
 }

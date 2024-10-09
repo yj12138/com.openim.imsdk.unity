@@ -3,29 +3,11 @@ using Newtonsoft.Json;
 using OpenIM.IMSDK.Unity.Util;
 using System.Collections.Generic;
 using System;
-using System.Diagnostics;
 using System.Collections.Concurrent;
-
-
-
-
-
-#if UNITY_EDITOR || UNITY_EDITOR_OSX || UNITY_IPHONE || UNITY_ANDROID || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_WEBGL
 using AOT;
-#endif
+
 namespace OpenIM.IMSDK.Unity
 {
-#if UNITY_EDITOR || UNITY_EDITOR_OSX || UNITY_IPHONE || UNITY_ANDROID || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_WEBGL
-#else
-    internal class MonoPInvokeCallbackAttribute : Attribute
-    {
-        Type funcType;
-        public MonoPInvokeCallbackAttribute(Type funcType)
-        {
-            this.funcType = funcType;
-        }
-    }
-#endif
     internal class Error
     {
         [JsonProperty("errCode")]
@@ -116,12 +98,24 @@ namespace OpenIM.IMSDK.Unity
                 case MessageDef.Msg_UserTokenExpired:
                     connCallBack.OnUserTokenExpired();
                     break;
+                case MessageDef.Msg_UserTokenInvalid:
+                    {
+                        Error err = Utils.FromJson<Error>(msg);
+                        connCallBack.OnUserTokenInvalid(err.ErrMsg);
+                        break;
+                    }
                 case MessageDef.Msg_SyncServerStart:
                     ConversationListener.OnSyncServerStart();
                     break;
                 case MessageDef.Msg_SyncServerFinish:
                     ConversationListener.OnSyncServerFinish();
                     break;
+                case MessageDef.Msg_SyncServerProgress:
+                    {
+                        var progress = Utils.FromJson<Progress>(msg);
+                        ConversationListener.OnSyncServerProgress(progress._Progress);
+                        break;
+                    }
                 case MessageDef.Msg_SyncServerFailed:
                     ConversationListener.OnSyncServerFailed();
                     break;
@@ -358,6 +352,21 @@ namespace OpenIM.IMSDK.Unity
                         UserListener.OnUserStatusChanged(data);
                     }
                     break;
+                case MessageDef.Msg_UserCommandAdd:
+                    {
+                        UserListener.OnUserCommandAdd(msg);
+                        break;
+                    }
+                case MessageDef.Msg_UserCommandDelete:
+                    {
+                        UserListener.OnUserCommandDelete(msg);
+                        break;
+                    }
+                case MessageDef.Msg_UserCommandUpdate:
+                    {
+                        UserListener.OnUserCommandUpdate(msg);
+                        break;
+                    }
                 case MessageDef.Msg_SendMessage_Error:
                     {
                         var data = Utils.FromJson<Error>(msg);
