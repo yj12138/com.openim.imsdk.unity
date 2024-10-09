@@ -76,4 +76,9 @@ public class IMSDKTest : MonoBehaviour, IConnCallBack
     {
         Debug.Log("OnUserTokenExpired");
     }
+
+    public void OnUserTokenInvalid(string errMsg)
+    {
+        Debug.Log("OnUserTokenInvalid:" + errMsg);
+    }
 }
