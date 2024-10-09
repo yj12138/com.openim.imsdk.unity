@@ -92,25 +92,11 @@ namespace OpenIM.IMSDK.Unity.Native
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_multiple_conversation(string operationID, string conversationIDList);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_conversation_msg_destruct_time(string operationID, string conversationID, long msgDestructTime);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_conversation_is_msg_destruct(string operationID, string conversationID, int isMsgDestruct);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void hide_conversation(string operationID, string conversationID);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_conversation_recv_message_opt(string operationID, string conversationIDList);
+        public static extern void set_conversation(string operationID, string conversationID, string conversationReq);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void set_conversation_draft(string operationID, string conversationID, string draftText);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void reset_conversation_group_at_type(string operationID, string conversationID);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void pin_conversation(string operationID, string conversationID, int isPinned);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_conversation_private_chat(string operationID, string conversationID, int isPrivate);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_conversation_burn_duration(string operationID, string conversationID, int duration);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_conversation_recv_message_opt(string operationID, string conversationID, int opt);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_total_unread_msg_count(string operationID);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
@@ -161,13 +147,7 @@ namespace OpenIM.IMSDK.Unity.Native
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_users_info(string operationID, string userIDs);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_users_info_with_cache(string operationID, string userIDs, string groupID);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_users_info_from_srv(string operationID, string userIDs);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void set_self_info(string operationID, string userInfo);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_global_recv_message_opt(string operationId, int opt);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_self_user_info(string operationID);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
@@ -184,19 +164,19 @@ namespace OpenIM.IMSDK.Unity.Native
 
         #region friend
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_specified_friends_info(string operationID, string userIDList);
+        public static extern void get_specified_friends_info(string operationID, string userIDList, int filterBlack);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_friend_list(string operationID);
+        public static extern void get_friend_list(string operationID, int filterBlack);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void get_friend_list_page(string operationID, int offset, int count);
+        public static extern void get_friend_list_page(string operationID, int offset, int count, int filterBlack);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void search_friends(string operationID, string searchParam);
+        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void update_friends(string operationID, string updateFriendReq);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void check_friend(string operationID, string userIDList);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void add_friend(string operationID, string userIDReqMsg);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_friend_remark(string operationID, string userIDRemark);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void delete_friend(string operationID, string friendUserID);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
@@ -229,8 +209,6 @@ namespace OpenIM.IMSDK.Unity.Native
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void change_group_member_mute(string operationId, string groupId, string userID, int mutedSeconds);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_group_member_role_level(string operationId, string groupId, string userID, int roleLevel);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void set_group_member_info(string operationId, string cGroupMemberInfo);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_joined_group_list(string operationId);
@@ -240,12 +218,6 @@ namespace OpenIM.IMSDK.Unity.Native
         public static extern void search_groups(string operationId, string cSearchParam);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void set_group_info(string operationId, string groupInfo);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_group_verification(string operationId, string groupId, int verification);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_group_look_member_info(string operationId, string groupId, int rule);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_group_apply_member_friend(string operationId, string groupId, int rule);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void get_group_member_list(string operationId, string groupId, int filter, int offset, int count);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
@@ -268,8 +240,6 @@ namespace OpenIM.IMSDK.Unity.Native
         public static extern void accept_group_application(string operationId, string groupId, string fromUserID, string handleMsg);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void refuse_group_application(string operationId, string groupId, string fromUserID, string handleMsg);
-        [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void set_group_member_nickname(string operationId, string groupId, string userID, string groupMemberNickname);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void search_group_members(string operationId, string searchParam);
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]

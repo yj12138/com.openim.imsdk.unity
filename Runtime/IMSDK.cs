@@ -363,65 +363,23 @@ namespace OpenIM.IMSDK.Unity
             callBackDic[operationID] = cb;
             IMNativeSDK.get_multiple_conversation(operationID, Utils.ToJson(conversationIdList));
         }
-        public static void SetConversationMsgDeStructTime(OnSucOrError cb, string conversationID, long msgDestructTime)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_conversation_msg_destruct_time(operationID, conversationID, msgDestructTime);
-        }
-        public static void SetConversationIsMsgDeStruct(OnSucOrError cb, string conversationID, bool isMsgDestruct)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_conversation_is_msg_destruct(operationID, conversationID, isMsgDestruct ? 1 : 0);
-        }
         public static void HideConversation(OnSucOrError cb, string conversationID)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
             IMNativeSDK.hide_conversation(operationID, conversationID);
         }
-        public static void GetConversationRecvMessageOpt(OnGetConversationRecvMessageOptRespList cb, string[] conversationIDList)
+        public static void SetConversation(OnSucOrError cb, string conversationID, ConversationReq req)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
-            IMNativeSDK.get_conversation_recv_message_opt(operationID, Utils.ToJson(conversationIDList));
+            IMNativeSDK.set_conversation(operationID, conversationID, Utils.ToJson(req));
         }
         public static void SetConversationDraft(OnSucOrError cb, string conversationID, string draftText)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
             IMNativeSDK.set_conversation_draft(operationID, conversationID, draftText);
-        }
-        public static void ResetConversationGroupAtType(OnSucOrError cb, string conversationID)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.reset_conversation_group_at_type(operationID, conversationID);
-        }
-        public static void PinConversation(OnSucOrError cb, string conversationID, bool isPinned)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.pin_conversation(operationID, conversationID, isPinned ? 1 : 0);
-        }
-        public static void SetConversationPrivateChat(OnSucOrError cb, string conversationID, bool isPrivate)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_conversation_private_chat(operationID, conversationID, isPrivate ? 1 : 0);
-        }
-        public static void SetConversationBurnDuration(OnSucOrError cb, string conversationID, int duration)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_conversation_burn_duration(operationID, conversationID, duration);
-        }
-        public static void SetConversationRecvMessageOpt(OnSucOrError cb, string conversationID, int opt)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_conversation_recv_message_opt(operationID, conversationID, opt);
         }
         public static void GetTotalUnreadMsgCount(OnInt cb)
         {
@@ -569,29 +527,11 @@ namespace OpenIM.IMSDK.Unity
             callBackDic[operationID] = cb;
             IMNativeSDK.get_users_info(operationID, Utils.ToJson(userIDs));
         }
-        public static void GetUsersInfoWithCache(OnFullUserInfoWithCacheList cb, string[] userIds, string groupId)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.get_users_info_with_cache(operationID, Utils.ToJson(userIds), groupId);
-        }
-        public static void GetUsersInfoFromSRV(OnLocalUserList cb, string[] userIDs)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.get_users_info_from_srv(operationID, Utils.ToJson(userIDs));
-        }
         public static void SetSelfInfo(OnSucOrError cb, UserInfo userInfo)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
             IMNativeSDK.set_self_info(operationID, Utils.ToJson(userInfo));
-        }
-        public static void SetGlobalRecvMessageOpt(OnSucOrError cb, int opt)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_global_recv_message_opt(operationID, opt);
         }
         public static void GetSelfUserInfo(OnLocalUser cb)
         {
@@ -632,29 +572,35 @@ namespace OpenIM.IMSDK.Unity
         #endregion
 
         #region friend
-        public static void GetSpecifiedFriendsInfo(OnFullUserInfoList cb, string[] userIDList)
+        public static void GetSpecifiedFriendsInfo(OnFullUserInfoList cb, string[] userIDList, bool filterBlack)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
-            IMNativeSDK.get_specified_friends_info(operationID, Utils.ToJson(userIDList));
+            IMNativeSDK.get_specified_friends_info(operationID, Utils.ToJson(userIDList), filterBlack ? 1 : 0);
         }
-        public static void GetFriendList(OnFullUserInfoList cb)
+        public static void GetFriendList(OnFullUserInfoList cb, bool filterBlack)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
-            IMNativeSDK.get_friend_list(operationID);
+            IMNativeSDK.get_friend_list(operationID, filterBlack ? 1 : 0);
         }
-        public static void GetFriendListPage(OnFullUserInfoList cb, int offset, int count)
+        public static void GetFriendListPage(OnFullUserInfoList cb, int offset, int count, bool filterBlack)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
-            IMNativeSDK.get_friend_list_page(operationID, offset, count);
+            IMNativeSDK.get_friend_list_page(operationID, offset, count, filterBlack ? 1 : 0);
         }
         public static void SearchFriends(OnSearchFriendItemList cb, SearchFriendsParam searchParam)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
             IMNativeSDK.search_friends(operationID, Utils.ToJson(searchParam));
+        }
+        public static void UpdateFriends(OnSucOrError cb, UpdateFriendsReq req)
+        {
+            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            callBackDic[operationID] = cb;
+            IMNativeSDK.search_friends(operationID, Utils.ToJson(req));
         }
         public static void CheckFriend(OnUserIDResultList cb, string[] userIDList)
         {
@@ -667,12 +613,6 @@ namespace OpenIM.IMSDK.Unity
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
             IMNativeSDK.add_friend(operationID, Utils.ToJson(userIDReqMsg));
-        }
-        public static void SetFriendRemark(OnSucOrError cb, SetFriendRemarkParams userIDRemark)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_friend_remark(operationID, Utils.ToJson(userIDRemark));
         }
         public static void DeleteFriend(OnSucOrError cb, string friendUserID)
         {
@@ -762,12 +702,6 @@ namespace OpenIM.IMSDK.Unity
             callBackDic[operationID] = cb;
             IMNativeSDK.change_group_member_mute(operationID, groupID, userID, mutedSeconds);
         }
-        public static void SetGroupMemberRoleLevel(OnSucOrError cb, string groupID, string userID, int roleLevel)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_group_member_role_level(operationID, groupID, userID, roleLevel);
-        }
         public static void SetGroupMemberInfo(OnSucOrError cb, SetGroupMemberInfo groupMemberInfo)
         {
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
@@ -797,24 +731,6 @@ namespace OpenIM.IMSDK.Unity
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
             IMNativeSDK.set_group_info(operationID, Utils.ToJson(groupInfo));
-        }
-        public static void SetGroupVerification(OnSucOrError cb, string groupID, int verification)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_group_verification(operationID, groupID, verification);
-        }
-        public static void SetGroupLookMemberInfo(OnSucOrError cb, string groupID, int rule)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_group_look_member_info(operationID, groupID, rule);
-        }
-        public static void SetGroupApplyMemberFriend(OnSucOrError cb, string groupID, int rule)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_group_apply_member_friend(operationID, groupID, rule);
         }
         public static void GetGroupMemberList(OnLocalGroupMemberList cb, string groupID, int filter, int offset, int count)
         {
@@ -881,12 +797,6 @@ namespace OpenIM.IMSDK.Unity
             var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
             callBackDic[operationID] = cb;
             IMNativeSDK.refuse_group_application(operationID, groupID, fromUserID, handleMsg);
-        }
-        public static void SetGroupMemberNickname(OnSucOrError cb, string groupID, string userID, string groupMemberNickname)
-        {
-            var operationID = GetOperationID(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            callBackDic[operationID] = cb;
-            IMNativeSDK.set_group_member_nickname(operationID, groupID, userID, groupMemberNickname);
         }
         public static void SearchGroupMembers(OnLocalGroupMemberList cb, SearchGroupMembersParam searchParam)
         {
