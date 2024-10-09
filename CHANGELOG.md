@@ -2,6 +2,10 @@
 
 All notable changes to this package will be documented in this file.
 
+## [2.0.0] - 2024-10-9
+
+Modify the sdk core version to 3.8.1
+
 ## [1.0.0] - 2024-10-7
 
 ### This is the first preview release of _Unity Package IMSDK_.
