@@ -5,15 +5,20 @@ namespace OpenIM.IMSDK.Unity.Util
 {
     public static class Utils
     {
-        public static void Log(params object[] args)
+
+        static string imLogPrefix = "[<color=#0000FF>IMSDK</color>]";
+        static string imErrPrefix = "[<color=#FF0000>IMSDK</color>]";
+        public static void Log(string str)
         {
 #if IMSDK_LOG_ENABLE
-            var str = "IMSDK:";
-            foreach (var v in args)
-            {
-                str += v.ToString() + " ";
-            }
-            UnityEngine.Debug.Log(str);
+            UnityEngine.Debug.Log(imLogPrefix + str);
+#endif
+        }
+
+        public static void Error(string str)
+        {
+#if IMSDK_LOG_ENABLE
+            UnityEngine.Debug.LogError(imErrPrefix + str);
 #endif
         }
 
