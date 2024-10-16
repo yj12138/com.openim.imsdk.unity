@@ -120,7 +120,7 @@ namespace OpenIM.IMSDK.Unity
             callBackDic[args.operationId] = cb;
             NativeSDK.CallAPI<Empty>(APIKey.Logout, Utils.ToJson(args));
         }
-        public static void SetAppBackGroundStatus(bool isBackground, OnBase cb)
+        public static void SetAppBackGroundStatus(OnBase cb, bool isBackground)
         {
             var args = new
             {
@@ -220,7 +220,7 @@ namespace OpenIM.IMSDK.Unity
             {
                 operationId = GetOperationId(MethodBase.GetCurrentMethod().Name),
                 text,
-                message
+                message = Utils.ToJson(message)
             };
             var msg = NativeSDK.CallAPI<MsgStruct>(APIKey.CreateQuoteMessage, Utils.ToJson(args));
             return msg;
@@ -738,7 +738,7 @@ namespace OpenIM.IMSDK.Unity
             var args = new
             {
                 operationId = GetOperationId(MethodBase.GetCurrentMethod().Name),
-                userInfo
+                userInfo = Utils.ToJson(userInfo)
             };
             callBackDic[args.operationId] = cb;
             NativeSDK.CallAPI<Empty>(APIKey.SetSelfInfo, Utils.ToJson(args));
