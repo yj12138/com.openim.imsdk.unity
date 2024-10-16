@@ -1,6 +1,27 @@
+using System;
 using Newtonsoft.Json;
 namespace OpenIM.IMSDK.Unity
 {
+    public class BoolValue
+    {
+        [JsonProperty("value")]
+        public bool Value;
+    }
+    public class Int32Value
+    {
+        [JsonProperty("value")]
+        public int Value;
+    }
+    public class Int64Value
+    {
+        [JsonProperty("value")]
+        public long Value;
+    }
+    public class StringValue
+    {
+        [JsonProperty("value")]
+        public string Value;
+    }
     public class MessageReceipt
     {
         [JsonProperty("groupID")]
@@ -1399,6 +1420,19 @@ namespace OpenIM.IMSDK.Unity
         [JsonProperty("isSearchRemark")]
         public bool IsSearchRemark;
     }
+    public class UpdateFriendsReq
+    {
+        [JsonProperty("ownerUserID")]
+        public string OwnerUserID;
+        [JsonProperty("friendUserIDs")]
+        public string[] FriendUserIDs;
+        [JsonProperty("isPinned")]
+        public BoolValue IsPinned;
+        [JsonProperty("remark")]
+        public StringValue Remark;
+        [JsonProperty("ex")]
+        public StringValue Ex;
+    }
 
     public class GetFriendListPage
     {
@@ -1661,17 +1695,7 @@ namespace OpenIM.IMSDK.Unity
         public string OwnerUserID;
     }
 
-    public class StringValue
-    {
-        [JsonProperty("value")]
-        public string Value;
-    }
 
-    public class Int32Value
-    {
-        [JsonProperty("value")]
-        public int Value;
-    }
     public class SetGroupMemberInfo
     {
         [JsonProperty("groupID")]
@@ -1733,5 +1757,96 @@ namespace OpenIM.IMSDK.Unity
 
         [JsonProperty("platformIDs")]
         public int[] PlatformIDs;
+    }
+
+    public class GetHistoryMessageListParams
+    {
+        [JsonProperty("userID")]
+        public string UserID;
+        [JsonProperty("groupID")]
+        public string GroupID;
+        [JsonProperty("conversationID")]
+        public string ConversationID;
+        [JsonProperty("startClientMsgID")]
+        public string StartClientMsgID;
+        [JsonProperty("count")]
+        public int Count;
+    }
+    public class SetConversationStatusParams
+    {
+        [JsonProperty("userID")]
+        public string UserId;
+        [JsonProperty("status")]
+        public int Status;
+    }
+    public class SearchLocalMessagesParams
+    {
+        [JsonProperty("conversationID")]
+        public string ConversationID;
+        [JsonProperty("keywordList")]
+        public string[] KeywordList;
+        [JsonProperty("keywordListMatchType")]
+        public int KeywordListMatchType;
+        [JsonProperty("senderUserIDList")]
+        public string[] SenderUserIDList;
+        [JsonProperty("messageTypeList")]
+        public int[] MessageTypeList;
+        [JsonProperty("searchTimePosition")]
+        public long SearchTimePosition;
+        [JsonProperty("searchTimePeriod")]
+        public long SearchTimePeriod;
+        [JsonProperty("pageIndex")]
+        public int PageIndex;
+        [JsonProperty("count")]
+        public int Count;
+    }
+    public class GetAdvancedHistoryMessageListParams
+    {
+        [JsonProperty("userID")]
+        public string UserID;
+        [JsonProperty("lastMinSeq")]
+        public Int64 LastMinSeq;
+        [JsonProperty("groupID")]
+        public string GroupID;
+        [JsonProperty("conversationID")]
+        public string ConversationID;
+        [JsonProperty("startClientMsgID")]
+        public string StartClientMsgID;
+        [JsonProperty("count")]
+        public int Count;
+    }
+
+    public class ConversationReq
+    {
+        [JsonProperty("conversationID")]
+        public string ConversationID;
+        [JsonProperty("conversationType")]
+        public Int32 ConversationType;
+        [JsonProperty("userID")]
+        public string UserID;
+        [JsonProperty("groupID")]
+        public string GroupID;
+        [JsonProperty("recvMsgOpt")]
+        public Int32Value RecvMsgOpt;
+        [JsonProperty("isPinned")]
+        public BoolValue IsPinned;
+        [JsonProperty("attachedInfo")]
+        public StringValue AttachedInfo;
+        [JsonProperty("isPrivateChat")]
+        public BoolValue IsPrivateChat;
+        [JsonProperty("ex")]
+        public StringValue Ex;
+        [JsonProperty("burnDuration")]
+        public Int32Value BurnDuration;
+        [JsonProperty("minSeq")]
+        public Int64Value MinSeq;
+        [JsonProperty("maxSeq")]
+        public Int64Value MaxSeq;
+        [JsonProperty("groupAtType")]
+        public Int32Value GroupAtType;
+        [JsonProperty("msgDestructTime")]
+        public Int64Value MsgDestructTime;
+        [JsonProperty("isMsgDestruct")]
+        public BoolValue IsMsgDestruct;
     }
 }

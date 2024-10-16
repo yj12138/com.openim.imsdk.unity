@@ -6,6 +6,7 @@ namespace OpenIM.IMSDK.Unity.Listener
     {
         void OnSyncServerStart();
         void OnSyncServerFinish();
+        void OnSyncServerProgress(int progress);
         void OnSyncServerFailed();
         void OnNewConversation(List<LocalConversation> conversationList);
         void OnConversationChanged(List<LocalConversation> conversationList);
