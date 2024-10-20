@@ -170,7 +170,7 @@ MonoBehaviour:
   wsAddr: ws://192.168.101.9:10001
   apiAddr: http://192.168.101.9:10002
   userId: test
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiJ0ZXN0IiwiUGxhdGZvcm1JRCI6MywiZXhwIjoxNzM2MDgyMzk4LCJuYmYiOjE3MjgzMDYwOTgsImlhdCI6MTcyODMwNjM5OH0.1nxduLgJe5YKvlDwJr-bmV2JWWVkGegfvbBw5Do5oGM
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiJ0ZXN0IiwiUGxhdGZvcm1JRCI6MywiZXhwIjoxNzM3MjA1NjUwLCJuYmYiOjE3Mjk0MjkzNTAsImlhdCI6MTcyOTQyOTY1MH0.Vt71NNtCKlao_k6Mo8BOigS50yHLv8WfsCHXUMiUpwM
 --- !u!1 &520573042
 GameObject:
   m_ObjectHideFlags: 0

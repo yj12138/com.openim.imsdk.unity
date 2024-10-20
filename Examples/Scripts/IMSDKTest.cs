@@ -26,19 +26,9 @@ public class IMSDKTest : MonoBehaviour
             LogFilePath = Application.productName + "/logs/",
             IsExternalExtensions = false,
         };
-        var listenGroup = new ListenGroup(
-            new ConnListener(),
-            new ConversationListener(),
-            new GroupListener(),
-            new FriendShipListener(),
-            new AdvancedMsgListener(),
-            new UserListener(),
-            new CustomBusinessListener(),
-            new BatchMsgListener()
-        );
-        initRes = IMSDK.InitSDK(config, listenGroup);
+        initRes = IMSDK.InitSDK(config, new ConnListener());
+        IMSDK.SetConversationListener(new ConversatioListener(this));
     }
-
 
     void Start()
     {
@@ -51,16 +41,15 @@ public class IMSDKTest : MonoBehaviour
                 {
                     if (suc)
                     {
-                        Debug.Log("Login UserId:" + IMSDK.GetLoginUser());
-                    }
-                    else
-                    {
+                        Debug.Log("Login UserId:" + IMSDK.GetLoginUserId());
+                        GetData();
                     }
                 });
             }
             else if (status == LoginStatus.Logged)
             {
-                Debug.Log("Login UserId:" + IMSDK.GetLoginUser());
+                Debug.Log("Login UserId:" + IMSDK.GetLoginUserId());
+                GetData();
             }
         }
     }
@@ -75,6 +64,32 @@ public class IMSDKTest : MonoBehaviour
 #if !UNITY_EDITOR
         IMSDK.UnInitSDK();
 #endif
+    }
+
+    public void GetData()
+    {
+        IMSDK.GetAllConversationList((list, errCode, errMsg) =>
+        {
+            if (list != null)
+            {
+                Debug.Log("Conversation Count:" + list.Count);
+            }
+        });
+
+        IMSDK.GetFriendList((friendList, errCode, errMsg) =>
+        {
+            if (friendList != null)
+            {
+                Debug.Log("Friend Count:" + friendList.Count);
+            }
+        }, true);
+        IMSDK.GetJoinedGroupList((groupList, errCode, errMsg) =>
+        {
+            if (groupList != null)
+            {
+                Debug.Log("Group Count:" + groupList.Count);
+            }
+        });
     }
 
     public class ConnListener : IConnListener
@@ -103,9 +118,15 @@ public class IMSDKTest : MonoBehaviour
         {
         }
     }
-    public class ConversationListener : IConversationListener
+    public class ConversatioListener : IConversationListener
     {
-        public void OnConversationChanged(List<LocalConversation> conversationList)
+        IMSDKTest test;
+        public ConversatioListener(IMSDKTest test)
+        {
+            this.test = test;
+        }
+
+        public void OnConversationChanged(List<Conversation> conversationList)
         {
         }
 
@@ -113,7 +134,7 @@ public class IMSDKTest : MonoBehaviour
         {
         }
 
-        public void OnNewConversation(List<LocalConversation> conversationList)
+        public void OnNewConversation(List<Conversation> conversationList)
         {
         }
 
@@ -123,6 +144,7 @@ public class IMSDKTest : MonoBehaviour
 
         public void OnSyncServerFinish()
         {
+            this.test.GetData();
         }
 
         public void OnSyncServerProgress(int progress)
@@ -134,170 +156,6 @@ public class IMSDKTest : MonoBehaviour
         }
 
         public void OnTotalUnreadMessageCountChanged(int totalUnreadCount)
-        {
-        }
-    }
-    public class GroupListener : IGroupListener
-    {
-        public void OnGroupApplicationAccepted(LocalGroupRequest groupApplication)
-        {
-        }
-
-        public void OnGroupApplicationAdded(LocalGroupRequest groupApplication)
-        {
-        }
-
-        public void OnGroupApplicationDeleted(LocalGroupRequest groupApplication)
-        {
-        }
-
-        public void OnGroupApplicationRejected(LocalGroupRequest groupApplication)
-        {
-        }
-
-        public void OnGroupDismissed(LocalGroup groupInfo)
-        {
-        }
-
-        public void OnGroupInfoChanged(LocalGroup groupInfo)
-        {
-        }
-
-        public void OnGroupMemberAdded(LocalGroupMember groupMemberInfo)
-        {
-        }
-
-        public void OnGroupMemberDeleted(LocalGroupMember groupMemberInfo)
-        {
-        }
-
-        public void OnGroupMemberInfoChanged(LocalGroupMember groupMemberInfo)
-        {
-        }
-
-        public void OnJoinedGroupAdded(LocalGroup groupInfo)
-        {
-        }
-
-        public void OnJoinedGroupDeleted(LocalGroup groupInfo)
-        {
-        }
-    }
-    public class FriendShipListener : IFriendShipListener
-    {
-        public void OnBlackAdded(LocalBlack blackInfo)
-        {
-        }
-
-        public void OnBlackDeleted(LocalBlack blackInfo)
-        {
-        }
-
-        public void OnFriendAdded(LocalFriend friendInfo)
-        {
-        }
-
-        public void OnFriendApplicationAccepted(LocalFriendRequest friendApplication)
-        {
-        }
-
-        public void OnFriendApplicationAdded(LocalFriendRequest friendApplication)
-        {
-        }
-
-        public void OnFriendApplicationDeleted(LocalFriendRequest friendApplication)
-        {
-        }
-
-        public void OnFriendApplicationRejected(LocalFriendRequest friendApplication)
-        {
-        }
-
-        public void OnFriendDeleted(LocalFriend friendInfo)
-        {
-        }
-
-        public void OnFriendInfoChanged(LocalFriend friendInfo)
-        {
-        }
-    }
-    public class AdvancedMsgListener : IAdvancedMsgListener
-    {
-        public void OnMsgDeleted(MsgStruct message)
-        {
-        }
-
-        public void OnNewRecvMessageRevoked(MessageRevoked messageRevoked)
-        {
-        }
-
-        public void OnRecvC2CReadReceipt(List<MessageReceipt> msgReceiptList)
-        {
-        }
-
-        public void OnRecvGroupReadReceipt(List<MessageReceipt> groupMsgReceiptList)
-        {
-        }
-
-        public void OnRecvMessageExtensionsAdded(string msgID, string reactionExtensionList)
-        {
-        }
-
-        public void OnRecvMessageExtensionsChanged(string msgID, string reactionExtensionList)
-        {
-        }
-
-        public void OnRecvMessageExtensionsDeleted(string msgID, string reactionExtensionKeyList)
-        {
-        }
-
-        public void OnRecvNewMessage(MsgStruct message)
-        {
-        }
-
-        public void OnRecvOfflineNewMessage(MsgStruct message)
-        {
-        }
-
-        public void OnRecvOnlineOnlyMessage(MsgStruct message)
-        {
-        }
-    }
-    public class UserListener : IUserListener
-    {
-        public void OnSelfInfoUpdated(LocalUser userInfo)
-        {
-        }
-
-        public void OnUserCommandAdd(string userCommand)
-        {
-        }
-
-        public void OnUserCommandDelete(string userCommand)
-        {
-        }
-
-        public void OnUserCommandUpdate(string userCommand)
-        {
-        }
-
-        public void OnUserStatusChanged(OnlineStatus userOnlineStatus)
-        {
-        }
-    }
-    public class CustomBusinessListener : ICustomBusinessListener
-    {
-        public void OnRecvCustomBusinessMessage(string businessMessage)
-        {
-        }
-    }
-    public class BatchMsgListener : IBatchMsgListener
-    {
-        public void OnRecvNewMessages(List<MsgStruct> messageList)
-        {
-        }
-
-        public void OnRecvOfflineNewMessages(List<MsgStruct> messageList)
         {
         }
     }

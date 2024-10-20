@@ -4,7 +4,7 @@ namespace OpenIM.IMSDK.Unity.Listener
 {
     public interface IBatchMsgListener
     {
-        void OnRecvNewMessages(List<MsgStruct> messageList);
-        void OnRecvOfflineNewMessages(List<MsgStruct> messageList);
+        void OnRecvNewMessages(List<Message> messageList);
+        void OnRecvOfflineNewMessages(List<Message> messageList);
     }
 }
