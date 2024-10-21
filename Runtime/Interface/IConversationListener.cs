@@ -8,8 +8,8 @@ namespace OpenIM.IMSDK.Unity.Listener
         void OnSyncServerFinish();
         void OnSyncServerProgress(int progress);
         void OnSyncServerFailed();
-        void OnNewConversation(List<LocalConversation> conversationList);
-        void OnConversationChanged(List<LocalConversation> conversationList);
+        void OnNewConversation(List<Conversation> conversationList);
+        void OnConversationChanged(List<Conversation> conversationList);
         void OnTotalUnreadMessageCountChanged(int totalUnreadCount);
         void OnConversationUserInputStatusChanged(InputStatesChangedData data);
     }

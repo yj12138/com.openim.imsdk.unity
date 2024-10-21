@@ -26,7 +26,7 @@ namespace OpenIM.IMSDK.Unity
         [JsonProperty("data")]
         public string Data;
     }
-    internal class ErrorOrSuccess
+    internal class ActiveCallResult
     {
         [JsonProperty("operationId")]
         public string OperationId;
@@ -81,358 +81,338 @@ namespace OpenIM.IMSDK.Unity
             switch (id)
             {
                 case MessageDef.Msg_Connecting:
-                    listenGroup.ConnListener.OnConnecting();
+                    connListener?.OnConnecting();
                     break;
                 case MessageDef.Msg_ConnectSuccess:
-                    listenGroup.ConnListener.OnConnectSuccess();
+                    connListener?.OnConnectSuccess();
                     break;
                 case MessageDef.Msg_ConnectFailed:
                     {
                         Error err = Utils.FromJson<Error>(msg);
-                        listenGroup.ConnListener.OnConnectFailed(err.ErrCode, err.ErrMsg);
+                        connListener?.OnConnectFailed(err.ErrCode, err.ErrMsg);
                         break;
                     }
                 case MessageDef.Msg_KickedOffline:
-                    listenGroup.ConnListener.OnKickedOffline();
+                    connListener?.OnKickedOffline();
                     break;
                 case MessageDef.Msg_UserTokenExpired:
-                    listenGroup.ConnListener.OnUserTokenExpired();
+                    connListener?.OnUserTokenExpired();
                     break;
                 case MessageDef.Msg_UserTokenInvalid:
                     {
                         Error err = Utils.FromJson<Error>(msg);
-                        listenGroup.ConnListener.OnUserTokenInvalid(err.ErrMsg);
+                        connListener?.OnUserTokenInvalid(err.ErrMsg);
                         break;
                     }
                 case MessageDef.Msg_SyncServerStart:
-                    listenGroup.ConversationListener.OnSyncServerStart();
+                    conversationListener?.OnSyncServerStart();
                     break;
                 case MessageDef.Msg_SyncServerFinish:
-                    listenGroup.ConversationListener.OnSyncServerFinish();
+                    conversationListener?.OnSyncServerFinish();
                     break;
                 case MessageDef.Msg_SyncServerProgress:
                     {
                         var progress = Utils.FromJson<Progress>(msg);
-                        listenGroup.ConversationListener.OnSyncServerProgress(progress._Progress);
+                        conversationListener?.OnSyncServerProgress(progress._Progress);
                         break;
                     }
                 case MessageDef.Msg_SyncServerFailed:
-                    listenGroup.ConversationListener.OnSyncServerFailed();
+                    conversationListener?.OnSyncServerFailed();
                     break;
                 case MessageDef.Msg_NewConversation:
                     {
-                        var data = Utils.FromJson<List<LocalConversation>>(msg);
-                        listenGroup.ConversationListener.OnNewConversation(data);
+                        var data = Utils.FromJson<List<Conversation>>(msg);
+                        conversationListener?.OnNewConversation(data);
                         break;
                     }
                 case MessageDef.Msg_ConversationChanged:
                     {
-                        var data = Utils.FromJson<List<LocalConversation>>(msg);
-                        listenGroup.ConversationListener.OnConversationChanged(data);
+                        var data = Utils.FromJson<List<Conversation>>(msg);
+                        conversationListener?.OnConversationChanged(data);
                         break;
                     }
                 case MessageDef.Msg_TotalUnreadMessageCountChanged:
                     if (int.TryParse(msg, out int count))
                     {
-                        listenGroup.ConversationListener.OnTotalUnreadMessageCountChanged(count);
+                        conversationListener?.OnTotalUnreadMessageCountChanged(count);
                     }
                     break;
                 case MessageDef.Msg_ConversationUserInputStatusChanged:
                     {
                         var data = Utils.FromJson<InputStatesChangedData>(msg);
-                        listenGroup.ConversationListener.OnConversationUserInputStatusChanged(data);
+                        conversationListener?.OnConversationUserInputStatusChanged(data);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvNewMessage:
                     {
-                        var data = Utils.FromJson<MsgStruct>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvNewMessage(data);
+                        var data = Utils.FromJson<Message>(msg);
+                        advancedMsgListener?.OnRecvNewMessage(data);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvC2CReadReceipt:
                     {
                         var data = Utils.FromJson<List<MessageReceipt>>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvC2CReadReceipt(data);
+                        advancedMsgListener?.OnRecvC2CReadReceipt(data);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvGroupReadReceipt:
                     {
                         var data = Utils.FromJson<List<MessageReceipt>>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvGroupReadReceipt(data);
+                        advancedMsgListener?.OnRecvGroupReadReceipt(data);
                     }
                     break;
                 case MessageDef.Msg_Advanced_NewRecvMessageRevoked:
                     {
                         var data = Utils.FromJson<MessageRevoked>(msg);
-                        listenGroup.AdvancedMsgListener.OnNewRecvMessageRevoked(data);
+                        advancedMsgListener?.OnNewRecvMessageRevoked(data);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvMessageExtensionsChanged:
                     {
                         var data = Utils.FromJson<MsgIDAndList>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvMessageExtensionsChanged(data.Id, data.List);
+                        advancedMsgListener?.OnRecvMessageExtensionsChanged(data.Id, data.List);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvMessageExtensionsDeleted:
                     {
                         var data = Utils.FromJson<MsgIDAndList>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvMessageExtensionsDeleted(data.Id, data.List);
+                        advancedMsgListener?.OnRecvMessageExtensionsDeleted(data.Id, data.List);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvMessageExtensionsAdded:
                     {
                         var data = Utils.FromJson<MsgIDAndList>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvMessageExtensionsAdded(data.Id, data.List);
+                        advancedMsgListener?.OnRecvMessageExtensionsAdded(data.Id, data.List);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvOfflineNewMessage:
                     {
-                        var data = Utils.FromJson<MsgStruct>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvOfflineNewMessage(data);
+                        var data = Utils.FromJson<Message>(msg);
+                        advancedMsgListener?.OnRecvOfflineNewMessage(data);
                     }
                     break;
                 case MessageDef.Msg_Advanced_MsgDeleted:
                     {
-                        var data = Utils.FromJson<MsgStruct>(msg);
-                        listenGroup.AdvancedMsgListener.OnMsgDeleted(data);
+                        var data = Utils.FromJson<Message>(msg);
+                        advancedMsgListener?.OnMsgDeleted(data);
                     }
                     break;
                 case MessageDef.Msg_Advanced_RecvOnlineOnlyMessage:
                     {
-                        var data = Utils.FromJson<MsgStruct>(msg);
-                        listenGroup.AdvancedMsgListener.OnRecvOnlineOnlyMessage(data);
+                        var data = Utils.FromJson<Message>(msg);
+                        advancedMsgListener?.OnRecvOnlineOnlyMessage(data);
                     }
                     break;
                 case MessageDef.Msg_Batch_RecvNewMessages:
                     {
-                        var data = Utils.FromJson<List<MsgStruct>>(msg);
-                        listenGroup.BatchMsgListener.OnRecvNewMessages(data);
+                        var data = Utils.FromJson<List<Message>>(msg);
+                        batchMsgListener?.OnRecvNewMessages(data);
                     }
                     break;
                 case MessageDef.Msg_Batch_RecvOfflineNewMessages:
                     {
-                        var data = Utils.FromJson<List<MsgStruct>>(msg);
-                        listenGroup.BatchMsgListener.OnRecvOfflineNewMessages(data);
+                        var data = Utils.FromJson<List<Message>>(msg);
+                        batchMsgListener?.OnRecvOfflineNewMessages(data);
                     }
                     break;
                 case MessageDef.Msg_FriendApplicationAdded:
                     {
-                        var data = Utils.FromJson<LocalFriendRequest>(msg);
-                        listenGroup.FriendShipListener.OnFriendApplicationAdded(data);
+                        var data = Utils.FromJson<FriendApplicationInfo>(msg);
+                        friendShipListener?.OnFriendApplicationAdded(data);
                     }
                     break;
                 case MessageDef.Msg_FriendApplicationDeleted:
                     {
-                        var data = Utils.FromJson<LocalFriendRequest>(msg);
-                        listenGroup.FriendShipListener.OnFriendApplicationDeleted(data);
+                        var data = Utils.FromJson<FriendApplicationInfo>(msg);
+                        friendShipListener?.OnFriendApplicationDeleted(data);
                     }
                     break;
                 case MessageDef.Msg_FriendApplicationAccepted:
                     {
-                        var data = Utils.FromJson<LocalFriendRequest>(msg);
-                        listenGroup.FriendShipListener.OnFriendApplicationAccepted(data);
+                        var data = Utils.FromJson<FriendApplicationInfo>(msg);
+                        friendShipListener?.OnFriendApplicationAccepted(data);
                     }
                     break;
                 case MessageDef.Msg_FriendApplicationRejected:
                     {
-                        var data = Utils.FromJson<LocalFriendRequest>(msg);
-                        listenGroup.FriendShipListener.OnFriendApplicationRejected(data);
+                        var data = Utils.FromJson<FriendApplicationInfo>(msg);
+                        friendShipListener?.OnFriendApplicationRejected(data);
                     }
                     break;
                 case MessageDef.Msg_FriendAdded:
                     {
-                        var data = Utils.FromJson<LocalFriend>(msg);
-                        listenGroup.FriendShipListener.OnFriendAdded(data);
+                        var data = Utils.FromJson<FriendInfo>(msg);
+                        friendShipListener?.OnFriendAdded(data);
                     }
                     break;
                 case MessageDef.Msg_FriendDeleted:
                     {
-                        var data = Utils.FromJson<LocalFriend>(msg);
-                        listenGroup.FriendShipListener.OnFriendDeleted(data);
+                        var data = Utils.FromJson<FriendInfo>(msg);
+                        friendShipListener?.OnFriendDeleted(data);
                     }
                     break;
                 case MessageDef.Msg_FriendInfoChanged:
                     {
-                        var data = Utils.FromJson<LocalFriend>(msg);
-                        listenGroup.FriendShipListener.OnFriendInfoChanged(data);
+                        var data = Utils.FromJson<FriendInfo>(msg);
+                        friendShipListener?.OnFriendInfoChanged(data);
                     }
                     break;
                 case MessageDef.Msg_BlackAdded:
                     {
-                        var data = Utils.FromJson<LocalBlack>(msg);
-                        listenGroup.FriendShipListener.OnBlackAdded(data);
+                        var data = Utils.FromJson<BlackInfo>(msg);
+                        friendShipListener?.OnBlackAdded(data);
                     }
                     break;
                 case MessageDef.Msg_BlackDeleted:
                     {
-                        var data = Utils.FromJson<LocalBlack>(msg);
-                        listenGroup.FriendShipListener.OnBlackDeleted(data);
+                        var data = Utils.FromJson<BlackInfo>(msg);
+                        friendShipListener?.OnBlackDeleted(data);
                     }
                     break;
                 case MessageDef.Msg_JoinedGroupAdded:
                     {
-                        var data = Utils.FromJson<LocalGroup>(msg);
-                        listenGroup.GroupListener.OnJoinedGroupAdded(data);
+                        var data = Utils.FromJson<GroupInfo>(msg);
+                        groupListener?.OnJoinedGroupAdded(data);
                     }
                     break;
                 case MessageDef.Msg_JoinedGroupDeleted:
                     {
-                        var data = Utils.FromJson<LocalGroup>(msg);
-                        listenGroup.GroupListener.OnJoinedGroupDeleted(data);
+                        var data = Utils.FromJson<GroupInfo>(msg);
+                        groupListener?.OnJoinedGroupDeleted(data);
                     }
                     break;
                 case MessageDef.Msg_GroupMemberAdded:
                     {
-                        var data = Utils.FromJson<LocalGroupMember>(msg);
-                        listenGroup.GroupListener.OnGroupMemberAdded(data);
+                        var data = Utils.FromJson<GroupMember>(msg);
+                        groupListener?.OnGroupMemberAdded(data);
                     }
                     break;
                 case MessageDef.Msg_GroupMemberDeleted:
                     {
-                        var data = Utils.FromJson<LocalGroupMember>(msg);
-                        listenGroup.GroupListener.OnGroupMemberDeleted(data);
+                        var data = Utils.FromJson<GroupMember>(msg);
+                        groupListener?.OnGroupMemberDeleted(data);
                     }
                     break;
                 case MessageDef.Msg_GroupApplicationAdded:
                     {
-                        var data = Utils.FromJson<LocalGroupRequest>(msg);
-                        listenGroup.GroupListener.OnGroupApplicationAdded(data);
+                        var data = Utils.FromJson<GroupApplicationInfo>(msg);
+                        groupListener?.OnGroupApplicationAdded(data);
                     }
                     break;
                 case MessageDef.Msg_GroupApplicationDeleted:
                     {
-                        var data = Utils.FromJson<LocalGroupRequest>(msg);
-                        listenGroup.GroupListener.OnGroupApplicationDeleted(data);
+                        var data = Utils.FromJson<GroupApplicationInfo>(msg);
+                        groupListener?.OnGroupApplicationDeleted(data);
                     }
                     break;
                 case MessageDef.Msg_GroupInfoChanged:
                     {
-                        var data = Utils.FromJson<LocalGroup>(msg);
-                        listenGroup.GroupListener.OnGroupInfoChanged(data);
+                        var data = Utils.FromJson<GroupInfo>(msg);
+                        groupListener?.OnGroupInfoChanged(data);
                     }
                     break;
                 case MessageDef.Msg_GroupDismissed:
                     {
-                        var data = Utils.FromJson<LocalGroup>(msg);
-                        listenGroup.GroupListener.OnGroupDismissed(data);
+                        var data = Utils.FromJson<GroupInfo>(msg);
+                        groupListener?.OnGroupDismissed(data);
                     }
                     break;
                 case MessageDef.Msg_GroupMemberInfoChanged:
                     {
-                        var data = Utils.FromJson<LocalGroupMember>(msg);
-                        listenGroup.GroupListener.OnGroupMemberInfoChanged(data);
+                        var data = Utils.FromJson<GroupMember>(msg);
+                        groupListener?.OnGroupMemberInfoChanged(data);
                     }
                     break;
                 case MessageDef.Msg_GroupApplicationAccepted:
                     {
-                        var data = Utils.FromJson<LocalGroupRequest>(msg);
-                        listenGroup.GroupListener.OnGroupApplicationAccepted(data);
+                        var data = Utils.FromJson<GroupApplicationInfo>(msg);
+                        groupListener?.OnGroupApplicationAccepted(data);
                     }
                     break;
                 case MessageDef.Msg_GroupApplicationRejected:
                     {
-                        var data = Utils.FromJson<LocalGroupRequest>(msg);
-                        listenGroup.GroupListener.OnGroupApplicationRejected(data);
+                        var data = Utils.FromJson<GroupApplicationInfo>(msg);
+                        groupListener?.OnGroupApplicationRejected(data);
                     }
                     break;
                 case MessageDef.Msg_RecvCustomBusinessMessage:
                     {
-                        listenGroup.CustomBusinessListener.OnRecvCustomBusinessMessage(msg);
                     }
                     break;
                 case MessageDef.Msg_SelfInfoUpdated:
                     {
-                        var data = Utils.FromJson<LocalUser>(msg);
-                        listenGroup.UserListener.OnSelfInfoUpdated(data);
+                        var data = Utils.FromJson<UserInfo>(msg);
+                        userListener?.OnSelfInfoUpdated(data);
                     }
                     break;
                 case MessageDef.Msg_UserStatusChanged:
                     {
                         var data = Utils.FromJson<OnlineStatus>(msg);
-                        listenGroup.UserListener.OnUserStatusChanged(data);
+                        userListener?.OnUserStatusChanged(data);
                     }
                     break;
                 case MessageDef.Msg_UserCommandAdd:
                     {
-                        listenGroup.UserListener.OnUserCommandAdd(msg);
+                        userListener?.OnUserCommandAdd(msg);
                         break;
                     }
                 case MessageDef.Msg_UserCommandDelete:
                     {
-                        listenGroup.UserListener.OnUserCommandDelete(msg);
+                        userListener?.OnUserCommandDelete(msg);
                         break;
                     }
                 case MessageDef.Msg_UserCommandUpdate:
                     {
-                        listenGroup.UserListener.OnUserCommandUpdate(msg);
+                        userListener?.OnUserCommandUpdate(msg);
                         break;
                     }
                 case MessageDef.Msg_SendMessage_Error:
                     {
                         var data = Utils.FromJson<Error>(msg);
-                        if (callBackDic.TryGetValue(data.OperationId, out Delegate func))
+                        if (msgSendCallBackDic.TryGetValue(data.OperationId, out var callBack))
                         {
-                            if (func is OnSendMessage)
-                            {
-                                func.DynamicInvoke(null, data.ErrCode, data.ErrMsg);
-                            }
-                            callBackDic.Remove(data.OperationId);
+                            callBack.OnError(data.ErrCode, data.ErrMsg);
+                            msgSendCallBackDic.Remove(data.OperationId);
                         }
                     }
                     break;
                 case MessageDef.Msg_SendMessage_Success:
                     {
                         var data = Utils.FromJson<Success>(msg);
-                        MsgStruct msgStruct = ConvertDataType(data.DataType, data.Data) as MsgStruct;
-                        if (callBackDic.TryGetValue(data.OperationId, out Delegate func))
+                        Message message = ConvertDataType(data.DataType, data.Data) as Message;
+                        if (msgSendCallBackDic.TryGetValue(data.OperationId, out var callBack))
                         {
-                            if (func is OnSendMessage)
-                            {
-                                func.DynamicInvoke(msgStruct, 0, "");
-                            }
-                            callBackDic.Remove(data.OperationId);
+                            callBack.OnSuccess(message);
+                            msgSendCallBackDic.Remove(data.OperationId);
                         }
                     }
                     break;
                 case MessageDef.Msg_SendMessage_Progress:
                     {
-                        // var data = Utils.FromJson<Progress>(msg);
+                        var data = Utils.FromJson<Progress>(msg);
+                        if (msgSendCallBackDic.TryGetValue(data.OperationId, out var callBack))
+                        {
+                            callBack.OnProgress(data._Progress);
+                            msgSendCallBackDic.Remove(data.OperationId);
+                        }
                     }
                     break;
-                case MessageDef.Msg_ErrorOrSuc:
-                    DispatorErrorOrSucMsg(Utils.FromJson<ErrorOrSuccess>(msg));
+                case MessageDef.Msg_ActiveCall:
+                    DispatorActiveCallMsg(Utils.FromJson<ActiveCallResult>(msg));
                     break;
             }
         }
-        private static void DispatorErrorOrSucMsg(ErrorOrSuccess msg)
+        private static void DispatorActiveCallMsg(ActiveCallResult msg)
         {
             if (callBackDic.TryGetValue(msg.OperationId, out Delegate func))
             {
-                if (func is OnBase)
+                if (msg.ErrCode >= 0)
                 {
-                    if (msg.ErrCode >= 0)
-                    {
-                        func.DynamicInvoke(false, msg.ErrCode, msg.ErrMsg);
-                    }
-                    else
-                    {
-                        func.DynamicInvoke(true, 0, "");
-                    }
-                }
-                else if (func is OnInt || func is OnBool)
-                {
-                    func.DynamicInvoke(ConvertDataType(msg.DataType, msg.Data));
+                    func.DynamicInvoke(null, msg.ErrCode, msg.ErrMsg);
                 }
                 else
                 {
-                    if (msg.ErrCode >= 0)
-                    {
-                        func.DynamicInvoke(null, msg.ErrCode, msg.ErrMsg);
-                    }
-                    else
-                    {
-                        func.DynamicInvoke(ConvertDataType(msg.DataType, msg.Data), 0, "");
-                    }
+                    func.DynamicInvoke(ConvertDataType(msg.DataType, msg.Data), 0, "");
                 }
                 callBackDic.Remove(msg.OperationId);
             }
@@ -447,32 +427,28 @@ namespace OpenIM.IMSDK.Unity
                     return Utils.FromJson<int>(msg);
                 case DataTypeDef.DataType_Bool:
                     return Utils.FromJson<bool>(msg);
-                case DataTypeDef.DataType_LocalConversation:
-                    return Utils.FromJson<LocalConversation>(msg);
-                case DataTypeDef.DataType_LocalConversation_List:
-                    return Utils.FromJson<List<LocalConversation>>(msg);
-                case DataTypeDef.DataType_GetConversationRecvMessageOptResp_List:
-                    return Utils.FromJson<List<GetConversationRecvMessageOptResp>>(msg);
-                case DataTypeDef.DataType_FindMessageList:
-                    return Utils.FromJson<FindMessageList>(msg);
-                case DataTypeDef.DataType_GetAdvancedHistoryMessageList:
-                    return Utils.FromJson<GetAdvancedHistoryMessageList>(msg);
-                case DataTypeDef.DataType_MsgStruct:
-                    return Utils.FromJson<MsgStruct>(msg);
-                case DataTypeDef.DataType_SearchLocalMessagesCallback:
-                    return Utils.FromJson<int>(msg);
-                case DataTypeDef.DataType_FullUserInfo:
-                    return Utils.FromJson<int>(msg);
-                case DataTypeDef.DataType_FullUserInfo_List:
-                    return Utils.FromJson<List<FullUserInfo>>(msg);
-                case DataTypeDef.DataType_FullUserInfoWithCache:
-                    return Utils.FromJson<FullUserInfoWithCache>(msg);
-                case DataTypeDef.DataType_FullUserInfoWithCache_List:
-                    return Utils.FromJson<List<FullUserInfoWithCache>>(msg);
-                case DataTypeDef.DataType_LocalUser:
-                    return Utils.FromJson<LocalUser>(msg);
-                case DataTypeDef.DataType_LocalUser_List:
-                    return Utils.FromJson<List<LocalUser>>(msg);
+                case DataTypeDef.DataType_StringArray:
+                    return Utils.FromJson<string[]>(msg);
+                case DataTypeDef.DataType_Conversation:
+                    return Utils.FromJson<Conversation>(msg);
+                case DataTypeDef.DataType_Conversation_List:
+                    return Utils.FromJson<List<Conversation>>(msg);
+                case DataTypeDef.DataType_FindMessageResult:
+                    return Utils.FromJson<FindMessageResult>(msg);
+                case DataTypeDef.DataType_AdvancedHistoryMessageResult:
+                    return Utils.FromJson<AdvancedMessageResult>(msg);
+                case DataTypeDef.DataType_Message:
+                    return Utils.FromJson<Message>(msg);
+                case DataTypeDef.DataType_SearchMessagesResult:
+                    return Utils.FromJson<SearchMessageResult>(msg);
+                case DataTypeDef.DataType_UserInfo:
+                    return Utils.FromJson<UserInfo>(msg);
+                case DataTypeDef.DataType_UserInfo_List:
+                    return Utils.FromJson<List<UserInfo>>(msg);
+                case DataTypeDef.DataType_PublicUserInfo:
+                    return Utils.FromJson<PublicUserInfo>(msg);
+                case DataTypeDef.DataType_PublicUserInfo_List:
+                    return Utils.FromJson<List<PublicUserInfo>>(msg);
                 case DataTypeDef.DataType_OnlineStatus:
                     return Utils.FromJson<OnlineStatus>(msg);
                 case DataTypeDef.DataType_OnlineStatus_List:
@@ -485,32 +461,30 @@ namespace OpenIM.IMSDK.Unity
                     return Utils.FromJson<UserIDResult>(msg);
                 case DataTypeDef.DataType_UserIDResult_List:
                     return Utils.FromJson<List<UserIDResult>>(msg);
-                case DataTypeDef.DataType_LocalFriendRequest:
-                    return Utils.FromJson<LocalFriendRequest>(msg);
-                case DataTypeDef.DataType_LocalFriendRequest_List:
-                    return Utils.FromJson<List<LocalFriendRequest>>(msg);
-                case DataTypeDef.DataType_LocalBlack:
-                    return Utils.FromJson<LocalBlack>(msg);
-                case DataTypeDef.DataType_LocalBlack_List:
-                    return Utils.FromJson<List<LocalBlack>>(msg);
+                case DataTypeDef.DataType_FriendInfo:
+                    return Utils.FromJson<FriendInfo>(msg);
+                case DataTypeDef.DataType_FriendInfo_List:
+                    return Utils.FromJson<List<FriendInfo>>(msg);
+                case DataTypeDef.DataType_FriendApplicationInfo:
+                    return Utils.FromJson<FriendApplicationInfo>(msg);
+                case DataTypeDef.DataType_FriendApplicationInfo_List:
+                    return Utils.FromJson<List<FriendApplicationInfo>>(msg);
+                case DataTypeDef.DataType_BlackInfo:
+                    return Utils.FromJson<BlackInfo>(msg);
+                case DataTypeDef.DataType_BlackInfo_List:
+                    return Utils.FromJson<List<BlackInfo>>(msg);
                 case DataTypeDef.DataType_GroupInfo:
-                    return Utils.FromJson<LocalGroup>(msg);
-                case DataTypeDef.DataType_LocalGroup:
-                    return Utils.FromJson<LocalGroup>(msg);
-                case DataTypeDef.DataType_LocalGroup_List:
-                    return Utils.FromJson<List<LocalGroup>>(msg);
-                case DataTypeDef.DataType_LocalGroupMember:
-                    return Utils.FromJson<LocalGroupMember>(msg);
-                case DataTypeDef.DataType_LocalGroupMember_List:
-                    return Utils.FromJson<List<LocalGroupMember>>(msg);
-                case DataTypeDef.DataType_LocalAdminGroupRequest:
-                    return Utils.FromJson<LocalAdminGroupRequest>(msg);
-                case DataTypeDef.DataType_LocalAdminGroupRequest_List:
-                    return Utils.FromJson<List<LocalAdminGroupRequest>>(msg);
-                case DataTypeDef.DataType_LocalGroupRequest:
-                    return Utils.FromJson<LocalGroupRequest>(msg);
-                case DataTypeDef.DataType_LocalGroupRequest_List:
-                    return Utils.FromJson<List<LocalGroupRequest>>(msg);
+                    return Utils.FromJson<GroupInfo>(msg);
+                case DataTypeDef.DataType_GroupInfo_List:
+                    return Utils.FromJson<List<GroupInfo>>(msg);
+                case DataTypeDef.DataType_GroupMember:
+                    return Utils.FromJson<GroupMember>(msg);
+                case DataTypeDef.DataType_GroupMember_List:
+                    return Utils.FromJson<List<GroupMember>>(msg);
+                case DataTypeDef.DataType_GroupApplicationInfo:
+                    return Utils.FromJson<GroupApplicationInfo>(msg);
+                case DataTypeDef.DataType_GroupApplicationInfo_List:
+                    return Utils.FromJson<List<GroupApplicationInfo>>(msg);
             }
             return null;
         }

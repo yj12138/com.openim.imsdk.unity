@@ -2,9 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [2.1.0] - 2024-10-21
+
+- Modify data structure and fix some bugs
+
 ## [2.0.0] - 2024-10-9
 
-Modify the sdk core version to 3.8.1
+- Modify the sdk core version to 3.8.1
 
 ## [1.0.0] - 2024-10-7
 

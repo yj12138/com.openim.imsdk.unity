@@ -94,6 +94,7 @@ namespace OpenIM.IMSDK.Unity.Native
         ChangeGroupMemberMute,
         SetGroupMemberInfo,
         GetJoinedGroupList,
+        GetJoinedGroupListPage,
         GetSpecifiedGroupsInfo,
         SearchGroups,
         SetGroupInfo,
@@ -110,5 +111,6 @@ namespace OpenIM.IMSDK.Unity.Native
         RefuseGroupApplication,
         SearchGroupMembers,
         IsJoinGroup,
+        GetUsersInGroup
     }
 }

@@ -68,6 +68,6 @@ namespace OpenIM.IMSDK.Unity.Native
         Msg_SendMessage_Success,
         Msg_SendMessage_Progress,
 
-        Msg_ErrorOrSuc
+        Msg_ActiveCall
     }
 }
