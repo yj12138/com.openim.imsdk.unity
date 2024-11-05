@@ -6,9 +6,9 @@ The underlying SDK core is implemented in [openim-sdk-cpp](https://github.com/op
 
 ## Documentation 📚
 
-Visit [https://doc.rentsoft.cn/](https://doc.rentsoft.cn/) for detailed documentation and guides.
+Visit [https://docs.openim.io/](https://docs.openim.io/) for detailed documentation and guides.
 
-For the SDK reference, see [https://doc.rentsoft.cn/sdks/quickstart/unity](https://doc.rentsoft.cn/sdks/quickstart/unity).
+For the SDK reference, see [https://docs.openim.io/sdks/quickstart/unity](https://docs.openim.io/sdks/quickstart/unity).
 
 ## Installation 💻
 
@@ -102,42 +102,7 @@ IMSDK.Logout((suc,err,errMsg)=>{
 IMSDK.UnInitSDK();
 ```
 
-To log into the IM server, you need to create an account and obtain a user ID and token. Refer to the [access token documentation](https://doc.rentsoft.cn/restapi/userManagement/userRegister) for details.
-
-### Receiving and Sending Messages 💬
-
-OpenIM makes it easy to send and receive messages. By default, there is no restriction on having a friend relationship to send messages (although you can configure other policies on the server). If you know the user ID of the recipient, you can conveniently send a message to them.
-
-```java
-//Send
-Message  msg = OpenIMClient.getInstance().messageManager.createTextMessage("hello openim");
-OpenIMClient.getInstance().messageManager.sendMessage(new OnMsgSendCallback() {
-            @Override
-            public void onError(int code, String error) {
-             // Failed to send message ❌
-            }
-
-            @Override
-            public void onProgress(long progress) {
-             //Sending...
-            }
-
-            @Override
-            public void onSuccess(Message message) {
-             // Message sent successfully ✉️
-
-            }
-        }, msg, userID, groupID, null);
-
-
-//Receive
-OpenIMClient.getInstance().messageManager.setAdvancedMsgListener(new OnAdvanceMsgListener(){
-  @Override
-            public void onRecvNewMessage(Message msg) {
-                // Received new message 📨
-            }
-}）
-```
+To log into the IM server, you need to create an account and obtain a user ID and token. Refer to the [access token documentation](https://docs.openim.io/restapi/userManagement/userRegister) for details.
 
 ## Examples 🌟
 
