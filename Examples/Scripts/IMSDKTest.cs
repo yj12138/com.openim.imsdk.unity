@@ -4,6 +4,7 @@ using UnityEngine;
 
 using OpenIM.IMSDK.Unity;
 using OpenIM.IMSDK.Unity.Listener;
+using System.IO;
 
 public class IMSDKTest : MonoBehaviour
 {
@@ -20,10 +21,10 @@ public class IMSDKTest : MonoBehaviour
             PlatformID = (int)PlatformID.WindowsPlatformID,
             ApiAddr = apiAddr,
             WsAddr = wsAddr,
-            DataDir = Application.persistentDataPath,
+            DataDir = Path.Combine(Application.persistentDataPath, "OpenIM"),
             LogLevel = (int)LogLevel.Debug,
             IsLogStandardOutput = true,
-            LogFilePath = Application.productName + "/logs/",
+            LogFilePath = Path.Combine(Application.persistentDataPath, "OpenIM/Logs"),
             IsExternalExtensions = false,
         };
         initRes = IMSDK.InitSDK(config, new ConnListener());
@@ -43,6 +44,12 @@ public class IMSDKTest : MonoBehaviour
                     {
                         Debug.Log("Login UserId:" + IMSDK.GetLoginUserId());
                         GetData();
+                    }
+                    else
+                    {
+                        {
+                            Debug.Log("Login Failed :" + errMsg);
+                        }
                     }
                 });
             }
