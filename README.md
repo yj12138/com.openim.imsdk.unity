@@ -102,7 +102,7 @@ IMSDK.Logout((suc,err,errMsg)=>{
 IMSDK.UnInitSDK();
 ```
 
-To log into the IM server, you need to create an account and obtain a user ID and token. Refer to the [access token documentation](https://docs.openim.io/restapi/userManagement/userRegister) for details.
+To log into the IM server, you need to create an account and obtain a user ID and token. Refer to the [access token documentation](https://docs.openim.io/restapi/apis/userManagement/userRegister) for details.
 
 ## Examples 🌟
 
