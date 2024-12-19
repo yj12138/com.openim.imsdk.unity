@@ -1,11 +1,13 @@
-namespace OpenIM.IMSDK.Unity.Listener
+using OpenIM.Proto;
+
+namespace OpenIM.IMSDK.Listener
 {
     public interface IUserListener
     {
-        void OnSelfInfoUpdated(UserInfo userInfo);
-        void OnUserStatusChanged(OnlineStatus userOnlineStatus);
-        void OnUserCommandAdd(string userCommand);
-        void OnUserCommandDelete(string userCommand);
-        void OnUserCommandUpdate(string userCommand);
+        void OnSelfInfoUpdated(IMUser userInfo);
+        void OnUserOnlineStatusChanged(string userId, Platform[] platforms);
+        void OnUserCommandAdd(CommandInfo commandInfo);
+        void OnUserCommandDelete(CommandInfo commandInfo);
+        void OnUserCommandUpdate(CommandInfo commandInfo);
     }
 }

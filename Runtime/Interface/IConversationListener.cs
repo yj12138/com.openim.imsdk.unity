@@ -1,16 +1,16 @@
-using System.Collections.Generic;
+using OpenIM.Proto;
 
-namespace OpenIM.IMSDK.Unity.Listener
+namespace OpenIM.IMSDK.Listener
 {
     public interface IConversationListener
     {
-        void OnSyncServerStart();
-        void OnSyncServerFinish();
+        void OnSyncServerStart(bool reinstalled);
+        void OnSyncServerFinish(bool reinstalled);
         void OnSyncServerProgress(int progress);
-        void OnSyncServerFailed();
-        void OnNewConversation(List<Conversation> conversationList);
-        void OnConversationChanged(List<Conversation> conversationList);
+        void OnSyncServerFailed(bool reinstalled);
+        void OnNewConversation(IMConversation[] conversations);
+        void OnConversationChanged(IMConversation[] conversations);
         void OnTotalUnreadMessageCountChanged(int totalUnreadCount);
-        void OnConversationUserInputStatusChanged(InputStatesChangedData data);
+        void OnConversationUserInputStatusChanged(string conversationId, string userId, Platform[] platforms);
     }
 }

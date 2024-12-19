@@ -167,10 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15700870ed1f7f4288e62be73ba32b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wsAddr: ws://192.168.101.9:10001
-  apiAddr: http://192.168.101.9:10002
-  userId: test
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiJ0ZXN0IiwiUGxhdGZvcm1JRCI6MywiZXhwIjoxNzM3MjA1NjUwLCJuYmYiOjE3Mjk0MjkzNTAsImlhdCI6MTcyOTQyOTY1MH0.Vt71NNtCKlao_k6Mo8BOigS50yHLv8WfsCHXUMiUpwM
+  wsAddr: ws://192.168.101.6:10001
+  apiAddr: http://192.168.101.6:10002
+  userId: test1
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiJ0ZXN0MSIsIlBsYXRmb3JtSUQiOjMsImV4cCI6MTc0MjM5MTg1MCwibmJmIjoxNzM0NjE1NTUwLCJpYXQiOjE3MzQ2MTU4NTB9.ww247nJLUyTM5QLhf-3IDz9nw4HqUHElL0ITZYpxRHY
 --- !u!1 &520573042
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,8 +300,8 @@ Camera:
   m_GameObject: {fileID: 1511419880}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

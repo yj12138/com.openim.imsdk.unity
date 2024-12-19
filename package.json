@@ -1,6 +1,6 @@
 {
     "name": "com.openim.imsdk",
-    "version": "2.1.1",
+    "version": "3.9.0",
     "displayName": "OpenIM SDK",
     "unity": "2022.1",
     "keywords": [
@@ -10,7 +10,5 @@
         "C2C"
     ],
     "description": "OpenIM provides the essential tools and frameworks necessary to integrate advanced messaging features efficiently into any application",
-    "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.1.0"
-    }
+    "dependencies": {}
 }

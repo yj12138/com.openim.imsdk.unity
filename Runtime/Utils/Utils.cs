@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
-namespace OpenIM.IMSDK.Unity.Util
+namespace OpenIM.IMSDK.Util
 {
     public static class Utils
     {

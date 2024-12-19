@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using OpenIM.IMSDK.Unity;
-using OpenIM.IMSDK.Unity.Listener;
+using OpenIM.Proto;
+using OpenIM.IMSDK;
 using System.IO;
 
 public class IMSDKTest : MonoBehaviour
@@ -12,158 +11,118 @@ public class IMSDKTest : MonoBehaviour
     public string apiAddr = "http://192.168.101.9:10002";
     public string userId = "test";
     public string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiJ0ZXN0IiwiUGxhdGZvcm1JRCI6MywiZXhwIjoxNzM2MDgyMzk4LCJuYmYiOjE3MjgzMDYwOTgsImlhdCI6MTcyODMwNjM5OH0.1nxduLgJe5YKvlDwJr-bmV2JWWVkGegfvbBw5Do5oGM";
-
-    bool initRes = false;
     void Awake()
     {
+        IMSDK.SetErrorHandler((errCode, errMsg) =>
+        {
+            Debug.LogError(errMsg);
+        });
+
+        IMSDK.SetConnListener(new ConnListener());
+        IMSDK.SetUserListener(new UserListener());
+        IMSDK.SetFriendShipListener(new FriendShipListener());
+        IMSDK.SetGroupListener(new GroupListener());
+        IMSDK.SetConversationListener(new ConversatioListener());
+        IMSDK.SetMessageListener(new MessageListener());
+
         var config = new IMConfig()
         {
-            PlatformID = (int)PlatformID.WindowsPlatformID,
+            Platform = Platform.Windows,
             ApiAddr = apiAddr,
             WsAddr = wsAddr,
             DataDir = Path.Combine(Application.persistentDataPath, "OpenIM"),
-            LogLevel = (int)LogLevel.Debug,
+            LogLevel = LogLevel.LevelDebug,
             IsLogStandardOutput = true,
             LogFilePath = Path.Combine(Application.persistentDataPath, "OpenIM/Logs"),
-            IsExternalExtensions = false,
+            DbPath = Path.Combine(Application.persistentDataPath, "OpenIM"),
         };
-        initRes = IMSDK.InitSDK(config, new ConnListener());
-        IMSDK.SetConversationListener(new ConversatioListener(this));
-    }
 
-    void Start()
-    {
-        if (initRes)
+        IMSDK.InitSDK((suc) =>
         {
-            var status = IMSDK.GetLoginStatus();
-            if (status == LoginStatus.Empty || status == LoginStatus.Logout)
-            {
-                IMSDK.Login(userId, token, (suc, err, errMsg) =>
-                {
-                    if (suc)
-                    {
-                        Debug.Log("Login UserId:" + IMSDK.GetLoginUserId());
-                        GetData();
-                    }
-                    else
-                    {
-                        {
-                            Debug.Log("Login Failed :" + errMsg);
-                        }
-                    }
-                });
-            }
-            else if (status == LoginStatus.Logged)
-            {
-                Debug.Log("Login UserId:" + IMSDK.GetLoginUserId());
-                GetData();
-            }
-        }
+            Debug.Log("InitSDK:" + suc);
+        }, config);
     }
 
     void Update()
     {
         IMSDK.Polling();
     }
-
-    void OnDestroy()
+    void OnGUI()
     {
-#if !UNITY_EDITOR
-        IMSDK.UnInitSDK();
-#endif
-    }
-
-    public void GetData()
-    {
-        IMSDK.GetAllConversationList((list, errCode, errMsg) =>
+        if (GUILayout.Button("Login"))
         {
-            if (list != null)
+            IMSDK.GetLoginStatus((status) =>
             {
-                Debug.Log("Conversation Count:" + list.Count);
-            }
-        });
+                if (status == LoginStatus.Logged)
+                {
+                    Debug.Log("Logged");
+                }
+                else if (status == LoginStatus.Logging)
+                {
+                    Debug.Log("Logging");
+                }
+                else
+                {
+                    IMSDK.Login((suc) =>
+                    {
+                        if (suc)
+                        {
+                            Debug.Log("Login success");
+                        }
+                        else
+                        {
+                            {
+                                Debug.Log("Login Failed");
+                            }
+                        }
+                    }, userId, token);
+                }
+            });
 
-        IMSDK.GetFriendList((friendList, errCode, errMsg) =>
+        }
+        if (GUILayout.Button("GetAllConversationList"))
         {
-            if (friendList != null)
+            IMSDK.GetAllConversationList((list) =>
             {
-                Debug.Log("Friend Count:" + friendList.Count);
-            }
-        }, true);
-        IMSDK.GetJoinedGroupList((groupList, errCode, errMsg) =>
+                if (list != null)
+                {
+                    Debug.Log("Conversation Count:" + list.Length);
+                }
+            });
+        }
+        if (GUILayout.Button("GetFriends"))
         {
-            if (groupList != null)
+            IMSDK.GetFriends((friendList) =>
             {
-                Debug.Log("Group Count:" + groupList.Count);
-            }
-        });
-    }
-
-    public class ConnListener : IConnListener
-    {
-        public void OnConnecting()
-        {
+                if (friendList != null)
+                {
+                    Debug.Log("Friend Count:" + friendList.Length);
+                }
+            }, true);
         }
-
-        public void OnConnectSuccess()
+        if (GUILayout.Button("GetJoinedGroups"))
         {
+            IMSDK.GetJoinedGroups((groupList) =>
+            {
+                if (groupList != null)
+                {
+                    Debug.Log("Group Count:" + groupList.Length);
+                }
+            });
         }
-
-        public void OnConnectFailed(int errCode, string errMsg)
+        if (GUILayout.Button("SendMessage"))
         {
+            IMSDK.CreateTextMessage((msg) =>
+            {
+                IMSDK.SendMessage(new SendMsgCallBack(), msg, "test2", "", false);
+            }, "Hello From Unity");
         }
-
-        public void OnKickedOffline()
+        if (GUILayout.Button("Logout"))
         {
-        }
-
-        public void OnUserTokenExpired()
-        {
-        }
-
-        public void OnUserTokenInvalid(string errMsg)
-        {
-        }
-    }
-    public class ConversatioListener : IConversationListener
-    {
-        IMSDKTest test;
-        public ConversatioListener(IMSDKTest test)
-        {
-            this.test = test;
-        }
-
-        public void OnConversationChanged(List<Conversation> conversationList)
-        {
-        }
-
-        public void OnConversationUserInputStatusChanged(InputStatesChangedData data)
-        {
-        }
-
-        public void OnNewConversation(List<Conversation> conversationList)
-        {
-        }
-
-        public void OnSyncServerFailed()
-        {
-        }
-
-        public void OnSyncServerFinish()
-        {
-            this.test.GetData();
-        }
-
-        public void OnSyncServerProgress(int progress)
-        {
-        }
-
-        public void OnSyncServerStart()
-        {
-        }
-
-        public void OnTotalUnreadMessageCountChanged(int totalUnreadCount)
-        {
+            IMSDK.Logout((suc) =>
+            {
+                Debug.Log("Logout:" + suc);
+            });
         }
     }
 }

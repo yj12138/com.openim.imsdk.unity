@@ -1,17 +1,19 @@
-namespace OpenIM.IMSDK.Unity.Listener
+using OpenIM.Proto;
+
+namespace OpenIM.IMSDK.Listener
 {
     public interface IGroupListener
     {
-        void OnJoinedGroupAdded(GroupInfo groupInfo);
-        void OnJoinedGroupDeleted(GroupInfo groupInfo);
-        void OnGroupMemberAdded(GroupMember groupMemberInfo);
-        void OnGroupMemberDeleted(GroupMember groupMemberInfo);
-        void OnGroupApplicationAdded(GroupApplicationInfo groupApplication);
-        void OnGroupApplicationDeleted(GroupApplicationInfo groupApplication);
-        void OnGroupInfoChanged(GroupInfo groupInfo);
-        void OnGroupDismissed(GroupInfo groupInfo);
-        void OnGroupMemberInfoChanged(GroupMember groupMemberInfo);
-        void OnGroupApplicationAccepted(GroupApplicationInfo groupApplication);
-        void OnGroupApplicationRejected(GroupApplicationInfo groupApplication);
+        void OnJoinedGroupAdded(IMGroup groupInfo);
+        void OnJoinedGroupDeleted(IMGroup groupInfo);
+        void OnGroupMemberAdded(IMGroupMember groupMemberInfo);
+        void OnGroupMemberDeleted(IMGroupMember groupMemberInfo);
+        void OnGroupApplicationAdded(IMGroupApplication groupApplication);
+        void OnGroupApplicationDeleted(IMGroupApplication groupApplication);
+        void OnGroupInfoChanged(IMGroup groupInfo);
+        void OnGroupDismissed(IMGroup groupInfo);
+        void OnGroupMemberInfoChanged(IMGroupMember groupMemberInfo);
+        void OnGroupApplicationAccepted(IMGroupApplication groupApplication);
+        void OnGroupApplicationRejected(IMGroupApplication groupApplication);
     }
 }

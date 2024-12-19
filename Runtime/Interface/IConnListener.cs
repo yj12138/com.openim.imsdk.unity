@@ -1,4 +1,4 @@
-namespace OpenIM.IMSDK.Unity.Listener
+namespace OpenIM.IMSDK.Listener
 {
     public interface IConnListener
     {

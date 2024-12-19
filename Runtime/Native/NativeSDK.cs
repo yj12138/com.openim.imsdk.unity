@@ -1,9 +1,12 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using Google.Protobuf;
+using OpenIM.Proto;
 
-namespace OpenIM.IMSDK.Unity.Native
+namespace OpenIM.IMSDK.Native
 {
-    delegate void MessageHandler(int id, string msg);
+    delegate void OnRecvEvent(IntPtr dataPtr, int len);
     class NativeSDK
     {
 #if (UNITY_IPHONE || UNITY_TVOS || UNITY_WEBGL || UNITY_SWITCH) && !UNITY_EDITOR
@@ -13,38 +16,53 @@ namespace OpenIM.IMSDK.Unity.Native
 #endif
 
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void set_msg_handler_func(MessageHandler handler);
+        static extern void ffi_init(OnRecvEvent handler, int protocolType);
 
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr call_api(int apiKey, string apiArgs);
+        static extern void ffi_request(byte[] data, int length);
 
         [DllImport(IMDLLName, CallingConvention = CallingConvention.Cdecl)]
-        static extern void free_data(IntPtr memPointer);
+        static extern void ffi_drop_handle(ulong handleId);
 
-        public static void SetMessageHandler(MessageHandler handler)
+
+        public static void Init(OnRecvEvent handler)
         {
-            set_msg_handler_func(handler);
+            // 1 :json 2: use Protobuf
+            ffi_init(handler, 2);
         }
-        public static T CallAPI<T>(APIKey key, string apiArgs) where T : class
+        static int operationId = 0;
+        static string GetOperationId()
         {
-            Util.Utils.Log(string.Format("[{0}]->{1}", key, apiArgs));
-            IntPtr res = call_api((int)key, apiArgs);
-            var str = Marshal.PtrToStringUTF8(res);
-            free_data(res);
-            Util.Utils.Log(string.Format("[{0}]<-{1}", key, str));
+            operationId++;
+            return string.Format("{0}", operationId);
+        }
+        public static void CallAPI<T>(ulong handleId, FuncRequestEventName apiKey, T req) where T : IMessage
+        {
             try
             {
-                if (!string.IsNullOrEmpty(str))
+                FfiRequest request = new FfiRequest()
                 {
-                    return Util.Utils.FromJson<T>(str);
+                    OperationID = GetOperationId(),
+                    HandleID = handleId,
+                    FuncName = apiKey,
+                    Data = ByteString.CopyFrom(req.ToByteArray()),
+                };
+                byte[] byteArray;
+                using (var memoryStream = new MemoryStream())
+                {
+                    request.WriteTo(memoryStream);
+                    byteArray = memoryStream.ToArray();
+                    ffi_request(byteArray, byteArray.Length);
                 }
             }
             catch (Exception e)
             {
                 Util.Utils.Log(e.ToString());
-                Util.Utils.Error(string.Format("Convert Type Error {0}:{1}", typeof(T), str));
             }
-            return default;
+        }
+        public static void DropHandle(ulong handleId)
+        {
+            ffi_drop_handle(handleId);
         }
     }
 }
